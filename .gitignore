@@ -1,0 +1,2 @@
+# ignore SBOMs/SPFX files
+*.spdx
