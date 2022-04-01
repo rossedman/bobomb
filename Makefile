@@ -24,3 +24,8 @@ delete/mgmt:
 
 delete/client:
 	kustomizer delete inventory platform-client --wait
+
+bom/geneate:
+	bom generate -n http://kubernetes.rossedman.io -d example/core -o platform-core.spdx
+	bom generate -n http://kubernetes.rossedman.io -d example/client -o platform-client.spdx
+	bom generate -n http://kubernetes.rossedman.io -d example/mgmt -o platform-mgmt.spdx
