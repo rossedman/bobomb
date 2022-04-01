@@ -12,7 +12,7 @@ go install sigs.k8s.io/kustomize/kustomize/v4@latest
 brew install stefanprodan/tap/kustomizer
 ```
 
-## Creating Artifact
+## Creating Artifacts
 
 First, create an SBOM of the files that are going to be bundled into the platform. This currently does not have a way to retrieve licenses from the kustomizations we are using but it does produce checksums for all the files we will include.
 
