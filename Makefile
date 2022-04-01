@@ -1,31 +1,35 @@
-release/platform: release/services/client release/services/core release/services/mgmt
+CORE_BUNDLE_VERSION   :=v0.0.1
+CLIENT_BUNDLE_VERSION :=v0.0.1
+MGMT_BUNDLE_VERSION   :=v0.0.1
 
-release/services/client:
-	kustomizer push artifact oci://ghcr.io/rossedman/platform-client:v0.0.1 -k example/client 
+services/release: services/release/client services/release/core services/release/mgmt
 
-release/services/core:
-	kustomizer push artifact oci://ghcr.io/rossedman/platform-core:v0.0.1 -k example/core
+services/release/client:
+	kustomizer push artifact oci://ghcr.io/rossedman/platform-client:${CLIENT_BUNDLE_VERSION} -k example/client 
 
-release/services/mgmt:
-	kustomizer push artifact oci://ghcr.io/rossedman/platform-mgmt:v0.0.1 -k example/mgmt
+services/release/core:
+	kustomizer push artifact oci://ghcr.io/rossedman/platform-core:${CORE_BUNDLE_VERSION} -k example/core
 
-deploy/mgmt:
+services/release/mgmt:
+	kustomizer push artifact oci://ghcr.io/rossedman/platform-mgmt:${MGMT_BUNDLE_VERSION} -k example/mgmt
+
+services/deploy/mgmt:
 	kustomizer apply inventory platform-mgmt --wait --prune \
-		--artifact oci://ghcr.io/rossedman/platform-core:v0.0.1 \
-		--artifact oci://ghcr.io/rossedman/platform-mgmt:v0.0.1
+		--artifact oci://ghcr.io/rossedman/platform-core:${CORE_BUNDLE_VERSION} \
+		--artifact oci://ghcr.io/rossedman/platform-mgmt:${MGMT_BUNDLE_VERSION}
 
-deploy/client:
+services/deploy/client:
 	kustomizer apply inventory platform-client --wait --prune \
-		--artifact oci://ghcr.io/rossedman/platform-core:v0.0.1 \
-		--artifact oci://ghcr.io/rossedman/platform-client:v0.0.1
+		--artifact oci://ghcr.io/rossedman/platform-core:${CORE_BUNDLE_VERSION} \
+		--artifact oci://ghcr.io/rossedman/platform-client:${MGMT_BUNDLE_VERSION}
 
-delete/mgmt:
+services/delete/mgmt:
 	kustomizer delete inventory platform-mgmt --wait
 
-delete/client:
+services/delete/client:
 	kustomizer delete inventory platform-client --wait
 
-bom/geneate:
+bom/generate:
 	bom generate -n http://kubernetes.rossedman.io -d example/core -o platform-core.spdx
 	bom generate -n http://kubernetes.rossedman.io -d example/client -o platform-client.spdx
 	bom generate -n http://kubernetes.rossedman.io -d example/mgmt -o platform-mgmt.spdx
