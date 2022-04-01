@@ -44,3 +44,7 @@ kustomizer apply inventory platform --wait --prune \
   --source ghcr.io/rossedman/platform \
   --revision v0.0.1
 ```
+
+```sh
+kustomizer delete inventory platform --wait
+```
